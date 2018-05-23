@@ -1,0 +1,26 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet id="createIsPromotedTable" author="morten" runOnChange="true">
+        <createTable tableName="is_promoted">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="date_of_promotion" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="officer_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rank_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="is_promoted"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

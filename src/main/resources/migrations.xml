@@ -1,0 +1,14 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+    <include file="liquibase/user.xml"/>
+    <include file="liquibase/person.xml"/>
+    <include file="liquibase/relation.xml"/>
+    <include file="liquibase/is_promoted.xml"/>
+    <include file="liquibase/rank.xml"/>
+    <include file="liquibase/officer.xml"/>
+    <include file="liquibase/constraints.xml" />
+    <include file="liquibase/inserts.xml" />
+</databaseChangeLog>

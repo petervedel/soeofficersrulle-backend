@@ -1,0 +1,40 @@
+logging:
+  level: DEBUG
+  loggers:
+    io.dropwizard: DEBUG
+  appenders:
+    - type: console
+
+apiUsername : ${API_USERNAME}
+
+apiPassword : ${API_PASSWORD}
+
+server:
+  applicationConnectors:
+    - type: http
+      port: ${DROPWIZARD_PORT}
+  adminConnectors:
+    - type: http
+      port: ${DROPWIZARD_ADMIN_PORT}
+
+database:
+  # the name of your JDBC driver
+  driverClass: com.mysql.jdbc.Driver
+
+  # the username
+  user: ${MYSQL_USER}
+
+  # the password
+  password: ${MYSQL_PASSWORD}
+
+  # the JDBC URL
+  url: jdbc:mysql://${MYSQL_ADRESS}:${MYSQL_PORT}/${MYSQL_DATABASE}
+
+  # any properties specific to your JDBC driver:
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQLInnoDBDialect
+
+  autoCommitByDefault: false
+  # the SQL query to run when validating a connection's liveness
+  validationQuery: "/* Application Health Check */ SELECT 1"

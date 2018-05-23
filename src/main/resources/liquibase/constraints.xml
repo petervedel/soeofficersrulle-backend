@@ -1,0 +1,61 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+    <changeSet author="morten" id="addUniqueConstraint-email">
+        <addUniqueConstraint columnNames="email"
+                             constraintName="const_email"
+                             tableName="user"/>
+    </changeSet>
+    <changeSet author="morten" id="addUniqueConstraint-username">
+        <addUniqueConstraint columnNames="username"
+                             constraintName="const_user"
+                             tableName="user"/>
+    </changeSet>
+    <changeSet author="morten" id="addForeignKeyConstraint-person">
+        <addForeignKeyConstraint baseColumnNames="person_id"
+                                 baseTableName="officer"
+                                 constraintName="fk_officer_person"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="person"/>
+    </changeSet>
+    <changeSet author="morten" id="addForeignKeyConstraint-relation-parent">
+        <addForeignKeyConstraint baseColumnNames="parent_id"
+                                 baseTableName="relation"
+                                 constraintName="fk_parent_person"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="person"/>
+    </changeSet>
+    <changeSet author="morten" id="addForeignKeyConstraint-relation-child">
+        <addForeignKeyConstraint baseColumnNames="child_id"
+                                 baseTableName="relation"
+                                 constraintName="fk_child_person"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="person"/>
+    </changeSet>
+    <changeSet author="morten" id="addForeignKeyConstraint-is-promoted">
+        <addForeignKeyConstraint baseColumnNames="officer_id"
+                                 baseTableName="is_promoted"
+                                 constraintName="fk_officer_promoted"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="officer"/>
+    </changeSet>
+    <changeSet author="morten" id="addForeignKeyConstraint-is-promoted2">
+        <addForeignKeyConstraint baseColumnNames="rank_id"
+                                 baseTableName="is_promoted"
+                                 constraintName="fk_promotion_rank"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="rank"/>
+    </changeSet>
+</databaseChangeLog>

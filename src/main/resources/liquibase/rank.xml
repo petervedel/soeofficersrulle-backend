@@ -1,0 +1,29 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet id="createRankTable" author="morten" runOnChange="true">
+        <createTable tableName="rank">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nato_code" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rank_name" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rank_valid_from" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rank_valid_until" type="date">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="rank"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,100 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+    <changeSet author="morten" id="rows">
+        <insert tableName="rank">
+            <column name="nato_code">1</column>
+            <column name="rank_name">Sekondløjtnant</column>
+            <column name="rank_valid_from">1868-01-02</column>
+            <column name="rank_valid_until">1922-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">1</column>
+            <column name="rank_name">Søløjtnant 2. grad</column>
+            <column name="rank_valid_from">1923-01-01</column>
+            <column name="rank_valid_until">9999-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">2</column>
+            <column name="rank_name">Premierløjtnant</column>
+            <column name="rank_valid_from">1868-01-02</column>
+            <column name="rank_valid_until">1922-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">2</column>
+            <column name="rank_name">Søløjtnant 1. grad</column>
+            <column name="rank_valid_from">1923-01-01</column>
+            <column name="rank_valid_until">9999-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">3</column>
+            <column name="rank_name">Kaptajnløjtnant</column>
+            <column name="rank_valid_from">1922-01-02</column>
+            <column name="rank_valid_until">9999-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">4</column>
+            <column name="rank_name">Kaptajn</column>
+            <column name="rank_valid_from">1868-01-02</column>
+            <column name="rank_valid_until">1922-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">4</column>
+            <column name="rank_name">Orlogskaptajn</column>
+            <column name="rank_valid_from">1923-01-01</column>
+            <column name="rank_valid_until">9999-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">5</column>
+            <column name="rank_name">Kommandørkaptajn</column>
+            <column name="rank_valid_from">1923-01-01</column>
+            <column name="rank_valid_until">9999-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">6</column>
+            <column name="rank_name">Kommandør</column>
+            <column name="rank_valid_from">1868-01-02</column>
+            <column name="rank_valid_until">9999-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">7</column>
+            <column name="rank_name">Kontreadmiral</column>
+            <column name="rank_valid_from">1771-01-02</column>
+            <column name="rank_valid_until">1868-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">7</column>
+            <column name="rank_name">Kontreadmiral</column>
+            <column name="rank_valid_from">1923-01-02</column>
+            <column name="rank_valid_until">9999-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">8</column>
+            <column name="rank_name">Admiralens lieutenant</column>
+            <column name="rank_valid_from">1565-01-01</column>
+            <column name="rank_valid_until">1566-07-01</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">8</column>
+            <column name="rank_name">Viceadmiral</column>
+            <column name="rank_valid_from">1566-07-02</column>
+            <column name="rank_valid_until">9999-12-31</column>
+        </insert>
+        <insert tableName="rank">
+            <column name="nato_code">9</column>
+            <column name="rank_name">Admiralen</column>
+            <column name="rank_valid_from">1535-01-01</column>
+            <column name="rank_valid_until">1566-07-01</column>
+        </insert>
+        <insert tableName="user">
+            <column name="username">admin</column>
+            <column name="password">6X7hSi7yjxFhsT4gsE2gSeOpaWILniFmvnEjDvD/o+M=$l8SLrgeAMypmE0zlhY14c66N7k5oiZuJR2VU8P/qpto=</column>
+            <column name="email">kontakt@nordkern.dk</column>
+            <column name="from_date">2018-03-20</column>
+            <column name="until_date">9999-12-31</column>
+            <column name="role">administrator</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
