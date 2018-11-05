@@ -1,10 +1,7 @@
 package com.nordkern.soeofficer.db;
 
 import com.google.inject.Inject;
-import com.nordkern.soeofficer.api.Officer;
-import com.nordkern.soeofficer.api.OfficerCorps;
-import com.nordkern.soeofficer.api.OfficerSearch;
-import com.nordkern.soeofficer.api.Person;
+import com.nordkern.soeofficer.api.*;
 import io.dropwizard.hibernate.AbstractDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
@@ -23,6 +20,9 @@ import java.util.*;
 public class OfficerDAO extends AbstractDAO<Officer> {
     @Inject
     PersonDAO personDAO;
+    @Inject
+    PromotionDAO promotionDAO;
+
 
     @Inject
     public OfficerDAO(SessionFactory factory) {
@@ -46,8 +46,18 @@ public class OfficerDAO extends AbstractDAO<Officer> {
             maskedPerson.setDateOfBirth(officer.getPerson().getDateOfBirth());
             maskedPerson.setDateOfDeath(officer.getPerson().getDateOfDeath());
             maskedPerson.setGender(officer.getPerson().getGender());
-            maskedPerson.setGivenName("");
-            maskedPerson.setSurname("");
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.YEAR, -110);
+            Date dateBefore110Years = cal.getTime();
+            if ((officer.getPerson().getDateOfBirth() == null || officer.getPerson().getDateOfBirth().after(dateBefore110Years)) && (officer.getPerson().getDateOfDeath() == null)) {
+                maskedPerson.setGivenName("");
+                maskedPerson.setSurname("");
+            } else {
+                maskedPerson.setGivenName(officer.getPerson().getGivenName());
+                maskedPerson.setSurname(officer.getPerson().getSurname());
+            }
 
             masked.setPerson(maskedPerson);
             return masked;
@@ -66,7 +76,7 @@ public class OfficerDAO extends AbstractDAO<Officer> {
         Person personCopy;
 
         for (Officer officer : officers) {
-            if (officer.getPerson().getDateOfBirth().after(dateBefore110Years)) {
+            if ((officer.getPerson().getDateOfBirth() == null || officer.getPerson().getDateOfBirth().after(dateBefore110Years)) && (officer.getPerson().getDateOfDeath() == null)) {
                 officerCopy = new Officer();
                 officerCopy.setId(officer.getId());
                 officerCopy.setTerminationCause(officer.getTerminationCause());
@@ -81,6 +91,8 @@ public class OfficerDAO extends AbstractDAO<Officer> {
                 personCopy.setGender(officer.getPerson().getGender());
                 personCopy.setDateOfDeath(officer.getPerson().getDateOfDeath());
                 personCopy.setDateOfBirth(officer.getPerson().getDateOfBirth());
+                personCopy.setGivenName("");
+                personCopy.setSurname("");
                 officerCopy.setPerson(personCopy);
 
                 officersCopy.add(officerCopy);
@@ -107,9 +119,18 @@ public class OfficerDAO extends AbstractDAO<Officer> {
         personQuery.select(personRoot);
         officerQuery.select(officerRoot);
 
+        if (officerSearch.getGivenName() != null) {
+            officerSearch.setGivenName(officerSearch.getGivenName().replace("*","%"));
+        }
+        if (officerSearch.getSurname() != null) {
+            officerSearch.setSurname(officerSearch.getSurname().replace("*","%"));
+        }
         Predicate givenName = builder.equal(personRoot.get("givenName"),officerSearch.getGivenName());
+        Predicate givenNameLike = builder.like(personRoot.get("givenName"),officerSearch.getGivenName());
         Predicate surname = builder.equal(personRoot.get("surname"),officerSearch.getSurname());
+        Predicate surnameLike = builder.like(personRoot.get("surname"),officerSearch.getSurname());
         Predicate gender = builder.equal(personRoot.get("gender"),officerSearch.getGender());
+        Predicate appointedNumber = builder.equal(officerRoot.get("appointedNumber"),officerSearch.getAppointedNumber());
 
         if (officerSearch.getYearOfBirthFrom() != null) {
             Calendar cal = Calendar.getInstance();
@@ -126,10 +147,18 @@ public class OfficerDAO extends AbstractDAO<Officer> {
             personConditionsList.add(builder.between(personRoot.get("dateOfBirth"),yearOfBirthFrom,yearOfBirthTo));
         }
         if (officerSearch.getGivenName() != null) {
-            personConditionsList.add(givenName);
+            if (officerSearch.getGivenName().contains("%")) {
+                personConditionsList.add(givenNameLike);
+            } else {
+                personConditionsList.add(givenName);
+            }
         }
         if (officerSearch.getSurname() != null) {
-            personConditionsList.add(surname);
+            if (officerSearch.getSurname().contains("%")) {
+                personConditionsList.add(surnameLike);
+            } else {
+                personConditionsList.add(surname);
+            }
         }
         if (officerSearch.getGender() != null) {
             personConditionsList.add(gender);
@@ -146,6 +175,9 @@ public class OfficerDAO extends AbstractDAO<Officer> {
             Date appointedYearTo = cal.getTime();
 
             officerConditionsList.add(builder.between(officerRoot.get("appointedDate"),appointedYearFrom,appointedYearTo));
+        }
+        if (officerSearch.getAppointedNumber() != null) {
+            officerConditionsList.add(appointedNumber);
         }
 
         if (0 < personConditionsList.size()) {
@@ -222,6 +254,7 @@ public class OfficerDAO extends AbstractDAO<Officer> {
             cal.set(9999, 11, 31);
             officer.setAppointedUntil(cal.getTime());
         }
+
         return persist(officer);
     }
 
@@ -242,7 +275,7 @@ public class OfficerDAO extends AbstractDAO<Officer> {
                 entry.setDodabNumber(((Integer)tuple[2]).longValue());
             else
                 entry.setDodabNumber(null);
-            entry.setAppointedDate((Date) tuple[3]);
+            entry.setPromotionDate((Date) tuple[12]);
             entry.setAppointedUntil((Date)tuple[4]);
             if (tuple[5] != null)
                 entry.setTerminationCause(Officer.TerminationCause.valueOf((String)tuple[5]));
@@ -254,6 +287,7 @@ public class OfficerDAO extends AbstractDAO<Officer> {
             entry.setSurname((String)tuple[9]);
             entry.setDateOfBirth((Date)tuple[10]);
             entry.setGender(Person.Gender.valueOf((String)tuple[11]));
+            entry.setDateOfDeath((Date)tuple[13]);
 
             if (!limitless) {
                 Calendar cal = Calendar.getInstance();
@@ -261,7 +295,7 @@ public class OfficerDAO extends AbstractDAO<Officer> {
                 cal.add(Calendar.YEAR, -110);
                 Date dateBefore110Years = cal.getTime();
 
-                if (entry.getDateOfBirth().after(dateBefore110Years)) {
+                if ((entry.getDateOfBirth() == null || entry.getDateOfBirth().after(dateBefore110Years)) && (entry.getDateOfDeath() == null)) {
                     entry.setGivenName("");
                     entry.setSurname("");
                 }

@@ -23,10 +23,14 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.server.AbstractServerFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import ru.vyarus.dropwizard.guice.GuiceBundle;
 
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
 import java.text.SimpleDateFormat;
+import java.util.EnumSet;
 
 public class SoeofficerApplication extends Application<SoeofficerConfiguration> {
 
@@ -47,7 +51,13 @@ public class SoeofficerApplication extends Application<SoeofficerConfiguration> 
 
         // enable Guice
         bootstrap.addBundle(GuiceBundle.builder()
-                .enableAutoConfig("com.nordkern.soeofficer")
+                .enableAutoConfig("com.nordkern.soeofficer.api",
+                        "com.nordkern.soeofficer.cli",
+                        "com.nordkern.soeofficer.client",
+                        "com.nordkern.soeofficer.core",
+                        "com.nordkern.soeofficer.db",
+                        "com.nordkern.soeofficer.hbm",
+                        "com.nordkern.soeofficer.resources")
                 .modules(new HbnModule(hibernate))
                 .build());
 
@@ -70,6 +80,18 @@ public class SoeofficerApplication extends Application<SoeofficerConfiguration> 
     @Override
     public void run(final SoeofficerConfiguration configuration,
                     final Environment environment) {
+        final FilterRegistration.Dynamic cors =
+                environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+
+        // Configure CORS parameters
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin,Authorization");
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "OPTIONS,GET,PUT,POST,DELETE,HEAD");
+        cors.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, "true");
+
+        // Add URL mapping
+        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+
         AbstractServerFactory sf = (AbstractServerFactory) configuration.getServerFactory();
         // disable all default exception mappers
         sf.setRegisterDefaultExceptionMappers(false);

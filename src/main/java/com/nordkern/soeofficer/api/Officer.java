@@ -34,17 +34,22 @@ import java.util.List;
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "com.nordkern.soeofficer.api.Officer.findAll",
-                query = "SELECT * FROM officer",
+                query = "SELECT officer.* FROM officer " +
+                        "JOIN person ON officer.person_id = person.id " +
+                        "ORDER BY person.surname, person.date_of_birth DESC",
                 resultClass = Officer.class
         ),
         @NamedNativeQuery(
                 name = "com.nordkern.soeofficer.api.Officer.officersWithLastRank",
-                query = "SELECT * FROM officer WHERE id IN (SELECT is_promoted.officer_id FROM is_promoted GROUP BY is_promoted.officer_id HAVING MAX(is_promoted.rank_id) = :rank_id)",
+                query = "SELECT officer.* FROM officer " +
+                        "JOIN person ON officer.person_id = person.id " +
+                        "WHERE officer.id IN (SELECT is_promoted.officer_id FROM is_promoted GROUP BY is_promoted.officer_id HAVING MAX(is_promoted.rank_id) = :rank_id) " +
+                        "ORDER BY person.surname, person.date_of_birth DESC",
                 resultClass = Officer.class
         ),
         @NamedNativeQuery(
                 name = "com.nordkern.soeofficer.api.Officer.officersActiveAtDate",
-                query = "SELECT officer.*, rank.rank_name, person.given_name, person.surname, person.date_of_birth, person.gender "+
+                query = "SELECT officer.*, rank.rank_name, person.given_name, person.surname, person.date_of_birth, person.gender, is_promoted.date_of_promotion, person.date_of_death "+
                         "FROM officer "+
                         "JOIN is_promoted ON officer.id = is_promoted.officer_id " +
                         "JOIN rank ON is_promoted.rank_id = rank.id " +
@@ -55,13 +60,13 @@ import java.util.List;
                         "  FROM is_promoted " +
                         "  WHERE is_promoted.date_of_promotion <= :date " +
                         "    AND officer.id = is_promoted.officer_id " +
-                        "ORDER BY is_promoted.date_of_promotion DESC " +
-                        "LIMIT 1)"
+                        "ORDER BY rank.nato_code, is_promoted.date_of_promotion DESC " +
+                        "LIMIT 1) " +
+                        "ORDER BY rank.nato_code DESC"
         ),
         @NamedNativeQuery(
                 name = "com.nordkern.soeofficer.api.Officer.firstRank",
-                query = "SELECT * FROM rank WHERE rank.id ORDER BY rank.id ASC LIMIT 1",
-                resultClass = Rank.class
+                query = "SELECT count(*) FROM is_promoted WHERE officer_id = :id"
         ),
         @NamedNativeQuery(
                 name = "com.nordkern.soeofficer.api.Officer.setAppointedDate",
@@ -74,7 +79,7 @@ import java.util.List;
 @Table(name = "officer")
 public class Officer {
 
-    public enum TerminationCause { Afsked,Dræbt_i_tjeneste,Dødsulykke,Invaliditet }
+    public enum TerminationCause { Terminated,Killed_in_action,Accidental_death,Transferred,Other }
 
     @ApiModelProperty(value = "The unique ID of the officer", example = "1", required = true)
     @Column(name = "id")
@@ -99,7 +104,7 @@ public class Officer {
     @Setter
     private Long dodabNumber;
 
-    @ApiModelProperty(value = "The date from which the officer title is valid", example = "01/01/2018")
+    @ApiModelProperty(value = "The date from which the officer title is valid ", example = "01/01/2018")
     @Column(name = "appointed_date", updatable=false)
     @Getter
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -117,7 +122,7 @@ public class Officer {
     @Temporal(value= TemporalType.DATE)
     private Date appointedUntil;
 
-    @ApiModelProperty(value = "The cause of termination", example = "Dødsulykke", required = true)
+    @ApiModelProperty(value = "The cause of termination", example = "Accidental_death", required = true)
     @Column(name = "termination_cause")
     @Getter
     @JsonProperty

@@ -8,6 +8,7 @@ import io.dropwizard.hibernate.AbstractDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -51,25 +52,32 @@ public class PromotionDAO extends AbstractDAO<Promotion> {
     }
 
     public Promotion promote(Long id, Promotion promotion) {
-        Officer officer = officerDAO.findById(id,true);
-        Rank rank;
-        if (officer.getPromotions().size()==0) {
-            rank = rankDAO.findById(Integer.toUnsignedLong(1));
-        } else {
-            List<Rank> ranks = list(namedQuery("com.nordkern.soeofficer.api.Officer.nextRank").setParameter("officer_id",id).setParameter("date",promotion.getDateOfPromotion()));
-            if (ranks.size() == 0) {
-                return null;
-            } else {
-                rank = ranks.get(0);
-            }
-        }
-
+        Officer officer = officerDAO.findById(id, true);
         promotion.setOfficer(officer);
-        promotion.setRank(rank);
+        if (promotion.getRank() == null) {
+            Rank rank;
+            if (officer.getPromotions().size() == 0) {
+                rank = rankDAO.findById(Integer.toUnsignedLong(1));
+            } else {
+                List<Rank> ranks = list(namedQuery("com.nordkern.soeofficer.api.Officer.nextRank").setParameter("officer_id", id).setParameter("date", promotion.getDateOfPromotion()));
+                if (ranks.size() == 0) {
+                    return null;
+                } else {
+                    rank = ranks.get(0);
+                }
+            }
+            promotion.setRank(rank);
 
-        Rank firstRank = ((List<Rank>)list(namedQuery("com.nordkern.soeofficer.api.Officer.firstRank"))).get(0);
-        if (firstRank.equals(rank)) {
-            namedQuery("com.nordkern.soeofficer.api.Officer.setAppointedDate").setParameter("appointed_date",promotion.getDateOfPromotion()).setParameter("id",promotion.getOfficer().getId()).executeUpdate();
+
+            Long rankCount = ((BigInteger) list(namedQuery("com.nordkern.soeofficer.api.Officer.firstRank").setParameter("id",id)).get(0)).longValue();
+            if (rankCount == 0) {
+                namedQuery("com.nordkern.soeofficer.api.Officer.setAppointedDate").setParameter("appointed_date", promotion.getDateOfPromotion()).setParameter("id", promotion.getOfficer().getId()).executeUpdate();
+            }
+        } else {
+            Long rankCount = ((BigInteger) list(namedQuery("com.nordkern.soeofficer.api.Officer.firstRank").setParameter("id",id)).get(0)).longValue();
+            if (rankCount == 0) {
+                namedQuery("com.nordkern.soeofficer.api.Officer.setAppointedDate").setParameter("appointed_date", promotion.getDateOfPromotion()).setParameter("id", promotion.getOfficer().getId()).executeUpdate();
+            }
         }
         return create(promotion);
     }

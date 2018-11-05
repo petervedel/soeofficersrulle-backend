@@ -58,4 +58,10 @@
                                  referencedColumnNames="id"
                                  referencedTableName="rank"/>
     </changeSet>
+    <changeSet author="morten" id="addUniqueConstraint-officer">
+        <addUniqueConstraint     tableName="officer"
+                                 columnNames="serial_number1"
+                                 constraintName="serial_number_constraint"
+        />
+    </changeSet>
 </databaseChangeLog>

@@ -7,84 +7,98 @@
         <insert tableName="rank">
             <column name="nato_code">1</column>
             <column name="rank_name">Sekondløjtnant</column>
+            <column name="rank_name_en">Sekondløjtnant</column>
             <column name="rank_valid_from">1868-01-02</column>
             <column name="rank_valid_until">1922-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">1</column>
             <column name="rank_name">Søløjtnant 2. grad</column>
+            <column name="rank_name_en">Søløjtnant 2. grad</column>
             <column name="rank_valid_from">1923-01-01</column>
             <column name="rank_valid_until">9999-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">2</column>
             <column name="rank_name">Premierløjtnant</column>
+            <column name="rank_name_en">Premierløjtnant</column>
             <column name="rank_valid_from">1868-01-02</column>
             <column name="rank_valid_until">1922-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">2</column>
             <column name="rank_name">Søløjtnant 1. grad</column>
+            <column name="rank_name_en">Søløjtnant 1. grad</column>
             <column name="rank_valid_from">1923-01-01</column>
             <column name="rank_valid_until">9999-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">3</column>
             <column name="rank_name">Kaptajnløjtnant</column>
+            <column name="rank_name_en">Kaptajnløjtnant</column>
             <column name="rank_valid_from">1922-01-02</column>
             <column name="rank_valid_until">9999-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">4</column>
             <column name="rank_name">Kaptajn</column>
+            <column name="rank_name_en">Kaptajn</column>
             <column name="rank_valid_from">1868-01-02</column>
             <column name="rank_valid_until">1922-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">4</column>
             <column name="rank_name">Orlogskaptajn</column>
+            <column name="rank_name_en">Orlogskaptajn</column>
             <column name="rank_valid_from">1923-01-01</column>
             <column name="rank_valid_until">9999-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">5</column>
             <column name="rank_name">Kommandørkaptajn</column>
+            <column name="rank_name_en">Kommandørkaptajn</column>
             <column name="rank_valid_from">1923-01-01</column>
             <column name="rank_valid_until">9999-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">6</column>
             <column name="rank_name">Kommandør</column>
+            <column name="rank_name_en">Kommandør</column>
             <column name="rank_valid_from">1868-01-02</column>
             <column name="rank_valid_until">9999-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">7</column>
             <column name="rank_name">Kontreadmiral</column>
+            <column name="rank_name_en">Kontreadmiral</column>
             <column name="rank_valid_from">1771-01-02</column>
             <column name="rank_valid_until">1868-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">7</column>
             <column name="rank_name">Kontreadmiral</column>
+            <column name="rank_name_en">Kontreadmiral</column>
             <column name="rank_valid_from">1923-01-02</column>
             <column name="rank_valid_until">9999-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">8</column>
             <column name="rank_name">Admiralens lieutenant</column>
+            <column name="rank_name_en">Admiralens lieutenant</column>
             <column name="rank_valid_from">1565-01-01</column>
             <column name="rank_valid_until">1566-07-01</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">8</column>
             <column name="rank_name">Viceadmiral</column>
+            <column name="rank_name_en">Viceadmiral</column>
             <column name="rank_valid_from">1566-07-02</column>
             <column name="rank_valid_until">9999-12-31</column>
         </insert>
         <insert tableName="rank">
             <column name="nato_code">9</column>
             <column name="rank_name">Admiralen</column>
+            <column name="rank_name_en">Admiralen</column>
             <column name="rank_valid_from">1535-01-01</column>
             <column name="rank_valid_until">1566-07-01</column>
         </insert>

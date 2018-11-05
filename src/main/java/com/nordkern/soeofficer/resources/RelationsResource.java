@@ -8,6 +8,7 @@ import com.nordkern.soeofficer.api.Relation;
 import com.nordkern.soeofficer.db.RelationsDAO;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.hibernate.UnitOfWork;
+import io.dropwizard.jersey.params.LongParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -43,7 +44,7 @@ public class RelationsResource implements DummyObject {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "parent", value = "The parent of the relation", required = true, dataType = "object", paramType = "query"),
             @ApiImplicitParam(name = "child", value = "The child of the relation", required = true, dataType = "object", paramType = "query"),
-            @ApiImplicitParam(name = "title", value = "The title of the parent. I.e. {Mor,Far}", required = true, dataType = "string", paramType = "query")
+            @ApiImplicitParam(name = "title", value = "The title of the parent. I.e. {Mother,Father}", required = true, dataType = "string", paramType = "query")
     })
     @ApiOperation(value = "Add a new relation to the system",
             response = Relation.class)
@@ -60,7 +61,7 @@ public class RelationsResource implements DummyObject {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "parent", value = "The parent of the relation", dataType = "object", paramType = "query"),
             @ApiImplicitParam(name = "child", value = "The child of the relation", dataType = "object", paramType = "query"),
-            @ApiImplicitParam(name = "title", value = "The title of the parent. I.e. {Mor,Far}", dataType = "string", paramType = "query")
+            @ApiImplicitParam(name = "title", value = "The title of the parent. I.e. {Mother,Father}", dataType = "string", paramType = "query")
     })
     @ApiOperation(value = "Update an existing relation of the system",
             response = Relation.class)
@@ -82,6 +83,25 @@ public class RelationsResource implements DummyObject {
         return relation;
     }
 
+    @ApiOperation(value = "Delete relation from the system",
+            response = Response.class)
+    @JsonParseFailure(swaggerLink = "https://path.to.swagger")
+    @DELETE
+    @Path("/{id}")
+    @PermitAll
+    @Timed
+    @UnitOfWork
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteRelation(@PathParam("id") LongParam id, @Auth AuthenticatedUser user) {
+        try {
+            dao.delete(id.get());
+        } catch (Exception e) {
+            throw new WebApplicationException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+        }
+
+        return Response.ok().build();
+    }
+
     @Override
     public Relation getDummyObject() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -96,20 +116,19 @@ public class RelationsResource implements DummyObject {
         dummyPersonChild.setDateOfBirth(dateOfBirth);
         dummyPersonChild.setGivenName("John");
         dummyPersonChild.setSurname("Doe");
-        dummyPersonChild.setGender(Person.Gender.Mand);
+        dummyPersonChild.setGender(Person.Gender.Male);
 
         Person dummyPersonParent = new Person();
         dummyPersonChild.setId(null);
         dummyPersonChild.setDateOfBirth(dateOfBirth);
         dummyPersonChild.setGivenName("Johnny");
         dummyPersonChild.setSurname("Does");
-        dummyPersonChild.setGender(Person.Gender.Mand);
+        dummyPersonChild.setGender(Person.Gender.Male);
 
         Relation dummyRelation = new Relation();
         dummyRelation.setId(null);
         dummyRelation.setChild(dummyPersonChild);
         dummyRelation.setParent(dummyPersonChild);
-        dummyRelation.setTitle(Relation.Title.Far);
 
         return dummyRelation;
     }

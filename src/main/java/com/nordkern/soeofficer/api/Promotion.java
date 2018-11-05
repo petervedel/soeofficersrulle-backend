@@ -25,7 +25,8 @@ import java.util.Date;
         ),
         @NamedNativeQuery(
             name = "com.nordkern.soeofficer.api.Officer.nextRank",
-            query = "(SELECT * FROM rank WHERE rank.id > (SELECT MAX(r.id) FROM rank r JOIN is_promoted ip ON r.id = ip.rank_id WHERE ip.officer_id = :officer_id) " +
+            query = "(SELECT * FROM rank WHERE rank.nato_code > (SELECT MAX(r.nato_code) FROM rank r JOIN is_promoted ip ON r.id = ip.rank_id WHERE " +
+                    "ip.officer_id = :officer_id) " +
                     "AND :date BETWEEN rank.rank_valid_from AND rank.rank_valid_until "+
                     "GROUP BY rank.id ASC LIMIT 1) "+
                     "UNION " +

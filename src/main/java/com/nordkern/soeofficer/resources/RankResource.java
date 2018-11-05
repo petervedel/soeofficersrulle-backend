@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 import com.nordkern.soeofficer.api.AuthenticatedUser;
 import com.nordkern.soeofficer.api.Rank;
+import com.nordkern.soeofficer.api.RanksActiveOnDateParam;
 import com.nordkern.soeofficer.core.MessageFactory;
 import com.nordkern.soeofficer.db.RankDAO;
 import io.dropwizard.auth.Auth;
@@ -135,6 +136,23 @@ public class RankResource implements DummyObject {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Rank> getAllRanks(@Auth AuthenticatedUser user) {
         return dao.findAll();
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "date", value = "The date search criteria", required = true, dataType = "date", paramType = "query")
+    })
+    @ApiOperation(value = "Get all rank's active on the specified date",
+            response = Response.class)
+    @JsonParseFailure(swaggerLink = "https://path.to.swagger")
+    @POST
+    @Path("/all/active")
+    @PermitAll
+    @Timed
+    @UnitOfWork
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Rank> findAllActiveOnDate(@Valid RanksActiveOnDateParam ranksActiveOnDateParam, @Auth AuthenticatedUser user) {
+
+        return dao.findAllActiveOnDate(ranksActiveOnDateParam.getDate());
     }
 
     @Override

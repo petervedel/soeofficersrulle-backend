@@ -1,0 +1,1686 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Please read on https://nordkern.dk/wp-content/uploads/2018/03/Projektplan.pdf",
+    "version" : "0.0.1",
+    "title" : "soeofficer",
+    "termsOfService" : "Please read on https://nordkern.dk/wp-content/uploads/2018/03/Projektplan.pdf",
+    "contact" : {
+      "name" : "Nordkern ApS",
+      "url" : "https://nordkern.dk",
+      "email" : "kontakt@nordkern.dk"
+    }
+  },
+  "basePath" : "/api",
+  "tags" : [ {
+    "name" : "officer",
+    "description" : "The officers of the system"
+  }, {
+    "name" : "person",
+    "description" : "The persons of the system"
+  }, {
+    "name" : "promotion",
+    "description" : "The promotions of the system"
+  }, {
+    "name" : "rank",
+    "description" : "The ranks of the system"
+  }, {
+    "name" : "relations",
+    "description" : "The persons of the system"
+  }, {
+    "name" : "user",
+    "description" : "The users of the system"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/officer" : {
+      "post" : {
+        "tags" : [ "officer" ],
+        "summary" : "Add an officer to the system",
+        "description" : "",
+        "operationId" : "createOfficer",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "appointedNumber",
+          "in" : "query",
+          "description" : "The appointed number of the officer",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "dodabNumber",
+          "in" : "query",
+          "description" : "The officer's Dodab number",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "appointedDate",
+          "in" : "query",
+          "description" : "The date from which the officer title is valid",
+          "required" : true,
+          "type" : "date"
+        }, {
+          "name" : "appointedUntil",
+          "in" : "query",
+          "description" : "The date from which the officer title is invalid",
+          "required" : true,
+          "type" : "date"
+        }, {
+          "name" : "terminationCause",
+          "in" : "query",
+          "description" : "The cause of termination",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "person",
+          "in" : "query",
+          "required" : true,
+          "type" : "object"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Officer"
+            }
+          }
+        }
+      }
+    },
+    "/officer/activeOnDate" : {
+      "post" : {
+        "tags" : [ "officer" ],
+        "summary" : "Get all active officers on date",
+        "description" : "",
+        "operationId" : "getActiveOfficersOnDate",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/OfficerCorps"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/officer/activeOnDate/limited" : {
+      "post" : {
+        "tags" : [ "officer" ],
+        "operationId" : "getActiveOfficersOnDateLimited",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/OfficerCorps"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/officer/all" : {
+      "get" : {
+        "tags" : [ "officer" ],
+        "summary" : "Get all officer's in the system",
+        "description" : "",
+        "operationId" : "getAllOfficers",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Person"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/officer/search" : {
+      "post" : {
+        "tags" : [ "officer" ],
+        "summary" : "Get all officers matching the supplied criteria",
+        "description" : "",
+        "operationId" : "getPersonsMatchingCriteria",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "givenName",
+          "in" : "query",
+          "description" : "The given name of the person",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "surname",
+          "in" : "query",
+          "description" : "The surname of the person",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dateOfBirth",
+          "in" : "query",
+          "description" : "The person's date of birth. Format is: DD/MM/YYYY",
+          "required" : false,
+          "type" : "date"
+        }, {
+          "name" : "gender",
+          "in" : "query",
+          "description" : "The gender of the person. Accepted values are from the set {Mand,Kvinde,Ukendt}",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "appointedDate",
+          "in" : "query",
+          "description" : "The date from which the officer title is valid",
+          "required" : false,
+          "type" : "date"
+        }, {
+          "name" : "rankID",
+          "in" : "query",
+          "description" : "The ID of the rank to be used as a criteria",
+          "required" : false,
+          "type" : "integer"
+        }, {
+          "name" : "dodabNumber",
+          "in" : "query",
+          "description" : "The officer's Dodab number",
+          "required" : false,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Officer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/officer/search/limited" : {
+      "post" : {
+        "tags" : [ "officer" ],
+        "operationId" : "getPersonsMatchingCriteriaLimited",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Officer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/officer/{id}" : {
+      "get" : {
+        "tags" : [ "officer" ],
+        "summary" : "Get specific officer from id",
+        "description" : "",
+        "operationId" : "readOfficer",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Officer"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "officer" ],
+        "summary" : "Update an existing officer of the system",
+        "description" : "",
+        "operationId" : "updateOfficer",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "appointedNumber",
+          "in" : "query",
+          "description" : "The appointed number of the officer",
+          "required" : false,
+          "type" : "integer"
+        }, {
+          "name" : "dodabNumber",
+          "in" : "query",
+          "description" : "The officer's Dodab number",
+          "required" : false,
+          "type" : "integer"
+        }, {
+          "name" : "appointedDate",
+          "in" : "query",
+          "description" : "The date from which the officer title is valid",
+          "required" : false,
+          "type" : "date"
+        }, {
+          "name" : "appointedUntil",
+          "in" : "query",
+          "description" : "The date from which the officer title is invalid",
+          "required" : false,
+          "type" : "date"
+        }, {
+          "name" : "terminationCause",
+          "in" : "query",
+          "description" : "The cause of termination",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "person",
+          "in" : "query",
+          "required" : false,
+          "type" : "object"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Officer"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "officer" ],
+        "summary" : "Delete an officer from the system",
+        "description" : "",
+        "operationId" : "deleteOfficer",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/officer/{id}/limited" : {
+      "get" : {
+        "tags" : [ "officer" ],
+        "summary" : "Get specific officer from id (limited)",
+        "description" : "",
+        "operationId" : "readOfficerLimited",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Officer"
+            }
+          }
+        }
+      }
+    },
+    "/officer/{id}/promote" : {
+      "post" : {
+        "tags" : [ "officer" ],
+        "summary" : "Promote an officer",
+        "description" : "",
+        "operationId" : "promoteOfficer",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Promotion"
+            }
+          }
+        }
+      }
+    },
+    "/officer/{id}/promotion/all" : {
+      "get" : {
+        "tags" : [ "officer" ],
+        "summary" : "Get all promotions belonging to an officer",
+        "description" : "",
+        "operationId" : "getPromotions",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Promotion"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/person" : {
+      "post" : {
+        "tags" : [ "person" ],
+        "summary" : "Add a new person to the system",
+        "description" : "",
+        "operationId" : "createPerson",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "givenName",
+          "in" : "query",
+          "description" : "The given name of the person",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "surname",
+          "in" : "query",
+          "description" : "The surname of the person",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dateOfBirth",
+          "in" : "query",
+          "description" : "The person's date of birth. Format is: DD/MM/YYYY",
+          "required" : true,
+          "type" : "date"
+        }, {
+          "name" : "gender",
+          "in" : "query",
+          "description" : "The gender of the person. Accepted values are from the set {Mand,Kvinde,Ukendt}",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dateOfDeath",
+          "in" : "query",
+          "description" : "The date the person has dies",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Person"
+            }
+          }
+        }
+      }
+    },
+    "/person/all" : {
+      "get" : {
+        "tags" : [ "person" ],
+        "summary" : "Get all persons in the system",
+        "description" : "",
+        "operationId" : "getAllPersons",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Person"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/person/search" : {
+      "post" : {
+        "tags" : [ "person" ],
+        "summary" : "Get all persons in the system matching the supplied criteria",
+        "description" : "",
+        "operationId" : "getPersonsMatchingCriteria",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "givenName",
+          "in" : "query",
+          "description" : "The given name of the person",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "surname",
+          "in" : "query",
+          "description" : "The surname of the person",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dateOfBirth",
+          "in" : "query",
+          "description" : "The person's date of birth. Format is: DD/MM/YYYY",
+          "required" : false,
+          "type" : "date"
+        }, {
+          "name" : "gender",
+          "in" : "query",
+          "description" : "The gender of the person. Accepted values are from the set {Mand,Kvinde,Ukendt}",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Person"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/person/upload" : {
+      "post" : {
+        "tags" : [ "person" ],
+        "summary" : "Upload a CSV file containing persons to be inserted into the database",
+        "description" : "",
+        "operationId" : "upload",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Person"
+            }
+          }
+        }
+      }
+    },
+    "/person/{id}" : {
+      "get" : {
+        "tags" : [ "person" ],
+        "summary" : "Gets specific person by id",
+        "description" : "",
+        "operationId" : "readPerson",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Person"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "person" ],
+        "summary" : "Update an existing person of the system",
+        "description" : "",
+        "operationId" : "updatePerson",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "givenName",
+          "in" : "query",
+          "description" : "The given name of the person",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "surname",
+          "in" : "query",
+          "description" : "The surname of the person",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dateOfBirth",
+          "in" : "query",
+          "description" : "The person's date of birth. Format is: DD/MM/YYYY",
+          "required" : false,
+          "type" : "date"
+        }, {
+          "name" : "gender",
+          "in" : "query",
+          "description" : "The gender of the person. Accepted values are from the set {Mand,Kvinde,Ukendt}",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dateOfDeath",
+          "in" : "query",
+          "description" : "The date the person has dies",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Person"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "person" ],
+        "summary" : "Delete person from the system",
+        "description" : "",
+        "operationId" : "deletePerson",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/person/{id}/relations" : {
+      "get" : {
+        "tags" : [ "person" ],
+        "summary" : "Gets parents of person",
+        "description" : "",
+        "operationId" : "getRelations",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RelationsResponse"
+            }
+          }
+        }
+      }
+    },
+    "/promotion" : {
+      "post" : {
+        "tags" : [ "promotion" ],
+        "summary" : "Add a promotion to the system",
+        "description" : "",
+        "operationId" : "createPromotion",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "dateOfPromotion",
+          "in" : "query",
+          "description" : "The date from which the rank is valid",
+          "required" : true,
+          "type" : "date"
+        }, {
+          "name" : "rank",
+          "in" : "query",
+          "description" : "The date from which the rank is invalid",
+          "required" : true,
+          "type" : "object"
+        }, {
+          "name" : "officer",
+          "in" : "query",
+          "description" : "The id of the officer possessing the rank",
+          "required" : true,
+          "type" : "object"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Promotion"
+            }
+          }
+        }
+      }
+    },
+    "/promotion/{id}" : {
+      "put" : {
+        "tags" : [ "promotion" ],
+        "summary" : "Update a promotion of the system",
+        "description" : "",
+        "operationId" : "updatePromotion",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "dateOfPromotion",
+          "in" : "query",
+          "description" : "The date from which the rank is valid",
+          "required" : false,
+          "type" : "date"
+        }, {
+          "name" : "rank",
+          "in" : "query",
+          "description" : "The date from which the rank is invalid",
+          "required" : false,
+          "type" : "object"
+        }, {
+          "name" : "officer",
+          "in" : "query",
+          "description" : "The id of the officer possessing the rank",
+          "required" : false,
+          "type" : "object"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Promotion"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "promotion" ],
+        "summary" : "Delete a promotion from the system",
+        "description" : "",
+        "operationId" : "deleteOfficer",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/rank" : {
+      "post" : {
+        "tags" : [ "rank" ],
+        "summary" : "Add a rank to the system",
+        "description" : "",
+        "operationId" : "createRank",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "natoCode",
+          "in" : "query",
+          "description" : "The nato code associated with the specific rank",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "rankName",
+          "in" : "query",
+          "description" : "The name of the rank",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "rankValidFrom",
+          "in" : "query",
+          "description" : "The date from which the rank is valid",
+          "required" : true,
+          "type" : "date"
+        }, {
+          "name" : "rankValidUntil",
+          "in" : "query",
+          "description" : "The date from which the rank is invalid",
+          "required" : true,
+          "type" : "date"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Rank"
+            }
+          }
+        }
+      }
+    },
+    "/rank/all" : {
+      "get" : {
+        "tags" : [ "rank" ],
+        "summary" : "Get all ranks's in the system",
+        "description" : "",
+        "operationId" : "getAllRanks",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Rank"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rank/all/active" : {
+      "post" : {
+        "tags" : [ "rank" ],
+        "summary" : "Get all rank's active on the specified date",
+        "description" : "",
+        "operationId" : "findAllActiveOnDate",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "date",
+          "in" : "query",
+          "description" : "The date search criteria",
+          "required" : true,
+          "type" : "date"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/rank/{id}" : {
+      "get" : {
+        "tags" : [ "rank" ],
+        "summary" : "Get specific rank from id",
+        "description" : "",
+        "operationId" : "readRank",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Rank"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "rank" ],
+        "summary" : "Update an existing rank of the system",
+        "description" : "",
+        "operationId" : "updateRank",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "natoCode",
+          "in" : "query",
+          "description" : "The nato code associated with the specific rank",
+          "required" : false,
+          "type" : "integer"
+        }, {
+          "name" : "rankName",
+          "in" : "query",
+          "description" : "The name of the rank",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "rankValidFrom",
+          "in" : "query",
+          "description" : "The date from which the rank is valid",
+          "required" : false,
+          "type" : "date"
+        }, {
+          "name" : "rankValidUntil",
+          "in" : "query",
+          "description" : "The date from which the rank is invalid",
+          "required" : false,
+          "type" : "date"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Rank"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "rank" ],
+        "summary" : "Delete a rank from the system",
+        "description" : "",
+        "operationId" : "deleteRank",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/relations" : {
+      "post" : {
+        "tags" : [ "relations" ],
+        "summary" : "Add a new relation to the system",
+        "description" : "",
+        "operationId" : "createRelation",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "parent",
+          "in" : "query",
+          "description" : "The parent of the relation",
+          "required" : true,
+          "type" : "object"
+        }, {
+          "name" : "child",
+          "in" : "query",
+          "description" : "The child of the relation",
+          "required" : true,
+          "type" : "object"
+        }, {
+          "name" : "title",
+          "in" : "query",
+          "description" : "The title of the parent. I.e. {Mother,Father}",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Relation"
+            }
+          }
+        }
+      }
+    },
+    "/relations/{id}" : {
+      "put" : {
+        "tags" : [ "relations" ],
+        "summary" : "Update an existing relation of the system",
+        "description" : "",
+        "operationId" : "updateRelation",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "parent",
+          "in" : "query",
+          "description" : "The parent of the relation",
+          "required" : false,
+          "type" : "object"
+        }, {
+          "name" : "child",
+          "in" : "query",
+          "description" : "The child of the relation",
+          "required" : false,
+          "type" : "object"
+        }, {
+          "name" : "title",
+          "in" : "query",
+          "description" : "The title of the parent. I.e. {Mother,Father}",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Relation"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "relations" ],
+        "summary" : "Delete relation from the system",
+        "description" : "",
+        "operationId" : "deleteRelation",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/user" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Add a new user to the system",
+        "description" : "",
+        "operationId" : "createUser",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "username",
+          "in" : "query",
+          "description" : "The unique username of the user",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "email",
+          "in" : "query",
+          "description" : "The unique email of the user",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "password",
+          "in" : "query",
+          "description" : "The password for the user",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "from",
+          "in" : "query",
+          "description" : "The date from which the user is valid. Format is: DD/MM/YYYY",
+          "required" : true,
+          "type" : "date"
+        }, {
+          "name" : "until",
+          "in" : "query",
+          "description" : "The date on which to user is invalid. Format is: DD/MM/YYYY",
+          "required" : true,
+          "type" : "date"
+        }, {
+          "name" : "role",
+          "in" : "query",
+          "description" : "The system-role of the user, from the set {contributor, administrator, read, privileged_read}",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/user/all" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Get all users of the system",
+        "description" : "",
+        "operationId" : "getAllUsers",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/search" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Get all users in the system matching the supplied criteria",
+        "description" : "",
+        "operationId" : "getPersonsMatchingCriteria",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "username",
+          "in" : "query",
+          "description" : "The username of the user",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "email",
+          "in" : "query",
+          "description" : "The email of the user",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/updatePassword" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Update an user password",
+        "description" : "",
+        "operationId" : "updatePassword",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "username",
+          "in" : "query",
+          "description" : "The unique username of the user",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "email",
+          "in" : "query",
+          "description" : "The unique email of the user",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "password",
+          "in" : "query",
+          "description" : "The new password",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/user/verify" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Verify the password of a given user",
+        "description" : "",
+        "operationId" : "verifyUser",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "username",
+          "in" : "query",
+          "description" : "The unique username of the user",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "email",
+          "in" : "query",
+          "description" : "The unique email of the user",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "password",
+          "in" : "query",
+          "description" : "The new password",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Gets specific user by id",
+        "description" : "",
+        "operationId" : "readUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "user" ],
+        "summary" : "Update an existing user of the system",
+        "description" : "",
+        "operationId" : "updateUser",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "username",
+          "in" : "query",
+          "description" : "The unique username of the user",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "email",
+          "in" : "query",
+          "description" : "The unique email of the user",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "password",
+          "in" : "query",
+          "description" : "The password for the user",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "from",
+          "in" : "query",
+          "description" : "The date from which the user is valid. Format is: DD/MM/YYYY",
+          "required" : false,
+          "type" : "date"
+        }, {
+          "name" : "until",
+          "in" : "query",
+          "description" : "The date on which to user is invalid. Format is: DD/MM/YYYY",
+          "required" : false,
+          "type" : "date"
+        }, {
+          "name" : "role",
+          "in" : "query",
+          "description" : "The system-role of the user, from the set {contributor, administrator, read, privileged_read}",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "user" ],
+        "summary" : "Delete user from the system",
+        "description" : "",
+        "operationId" : "deleteUser",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Officer" : {
+      "type" : "object",
+      "required" : [ "appointedNumber", "dodabNumber", "id", "person", "terminationCause" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 1,
+          "description" : "The unique ID of the officer"
+        },
+        "appointedNumber" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 12,
+          "description" : "The appointed number of the officer"
+        },
+        "dodabNumber" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 123,
+          "description" : "The officer's Dodab number"
+        },
+        "appointedDate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The date from which the officer title is valid",
+          "readOnly" : true
+        },
+        "appointedUntil" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The date from which the officer title is invalid"
+        },
+        "terminationCause" : {
+          "type" : "string",
+          "example" : "Accidental_death",
+          "description" : "The cause of termination",
+          "enum" : [ "Terminated", "Killed_in_action", "Accidental_death", "Transferred", "Other" ]
+        },
+        "person" : {
+          "description" : "The person associated with the officer",
+          "$ref" : "#/definitions/Person"
+        }
+      }
+    },
+    "OfficerCorps" : {
+      "type" : "object",
+      "required" : [ "appointedDate", "appointedNumber", "appointedUntil", "dateOfBirth", "dodabNumber", "gender", "givenName", "id", "personId", "rankName", "surname", "terminationCause" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 1,
+          "description" : "The unique ID of the officer"
+        },
+        "appointedNumber" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 12,
+          "description" : "The appointed number of the officer"
+        },
+        "dodabNumber" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 123,
+          "description" : "The officer's Dodab number"
+        },
+        "appointedDate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The date from which the officer title is valid"
+        },
+        "appointedUntil" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The date from which the officer title is invalid"
+        },
+        "terminationCause" : {
+          "type" : "string",
+          "example" : "Dødsulykke",
+          "description" : "The cause of termination",
+          "enum" : [ "Terminated", "Killed_in_action", "Accidental_death", "Transferred", "Other" ]
+        },
+        "personId" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "The person associated with the officer"
+        },
+        "rankName" : {
+          "type" : "string",
+          "description" : "The rank associated with the officer"
+        },
+        "givenName" : {
+          "type" : "string",
+          "example" : "John",
+          "description" : "The given name of the person"
+        },
+        "surname" : {
+          "type" : "string",
+          "example" : "Doe",
+          "description" : "The surname of the person"
+        },
+        "dateOfBirth" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The person's date of birth. Format is: DD/MM/YYYY"
+        },
+        "gender" : {
+          "type" : "string",
+          "example" : "Mand",
+          "description" : "The gender of the person. Accepted values are from the set {Mand,Kvinde,Ukendt}",
+          "enum" : [ "Male", "Female", "Unknown" ]
+        }
+      }
+    },
+    "Person" : {
+      "type" : "object",
+      "required" : [ "dateOfBirth", "gender", "givenName", "id", "surname" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 1,
+          "description" : "The unique ID of the person"
+        },
+        "givenName" : {
+          "type" : "string",
+          "example" : "John",
+          "description" : "The given name of the person"
+        },
+        "surname" : {
+          "type" : "string",
+          "example" : "Doe",
+          "description" : "The surname of the person"
+        },
+        "dateOfBirth" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The person's date of birth. Format is: DD/MM/YYYY"
+        },
+        "gender" : {
+          "type" : "string",
+          "example" : "Mand",
+          "description" : "The gender of the person. Accepted values are from the set {Mand,Kvinde,Ukendt}",
+          "enum" : [ "Male", "Female", "Unknown" ]
+        },
+        "dateOfDeath" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The date of death. Format is: DD/MM/YYYY"
+        }
+      }
+    },
+    "PersonRelation" : {
+      "type" : "object",
+      "required" : [ "dateOfBirth", "gender", "givenName", "id", "surname" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 1,
+          "description" : "The unique ID of the person"
+        },
+        "givenName" : {
+          "type" : "string",
+          "example" : "John",
+          "description" : "The given name of the person"
+        },
+        "surname" : {
+          "type" : "string",
+          "example" : "Doe",
+          "description" : "The surname of the person"
+        },
+        "dateOfBirth" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The person's date of birth. Format is: DD/MM/YYYY"
+        },
+        "gender" : {
+          "type" : "string",
+          "example" : "Mand",
+          "description" : "The gender of the person. Accepted values are from the set {Mand,Kvinde,Ukendt}",
+          "enum" : [ "Male", "Female", "Unknown" ]
+        },
+        "dateOfDeath" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The date of death. Format is: DD/MM/YYYY"
+        },
+        "type" : {
+          "type" : "string",
+          "example" : "{mother,father}",
+          "description" : "The type of parent",
+          "enum" : [ "Mother", "Father" ]
+        },
+        "isOfficer" : {
+          "type" : "boolean",
+          "example" : false,
+          "description" : "If the relation is an officer"
+        },
+        "relationID" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : "true / false",
+          "description" : "The id of the relation"
+        }
+      }
+    },
+    "Promotion" : {
+      "type" : "object",
+      "required" : [ "dateOfPromotion", "id", "rank" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 1,
+          "description" : "The unique ID of the promotion"
+        },
+        "dateOfPromotion" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "1",
+          "description" : "The date from which the rank is valid"
+        },
+        "rank" : {
+          "example" : "1",
+          "description" : "The date from which the rank is invalid",
+          "$ref" : "#/definitions/Rank"
+        }
+      }
+    },
+    "Rank" : {
+      "type" : "object",
+      "required" : [ "id", "natoCode", "rankName", "rankNameEn", "rankValidFrom", "rankValidUntil" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 1,
+          "description" : "The unique ID of the rank"
+        },
+        "natoCode" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 1234,
+          "description" : "The nato code of the rank"
+        },
+        "rankName" : {
+          "type" : "string",
+          "example" : "Officer",
+          "description" : "The name of the rank"
+        },
+        "rankNameEn" : {
+          "type" : "string",
+          "example" : "Officer",
+          "description" : "The english name of the rank"
+        },
+        "rankValidFrom" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The date from which the rank is valid"
+        },
+        "rankValidUntil" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The date from which the rank is invalid"
+        }
+      }
+    },
+    "Relation" : {
+      "type" : "object",
+      "required" : [ "child", "id", "parent" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 1,
+          "description" : "The unique ID of the relation"
+        },
+        "parent" : {
+          "example" : "1",
+          "description" : "The parent of the relation",
+          "$ref" : "#/definitions/Person"
+        },
+        "child" : {
+          "example" : "1",
+          "description" : "The parent of the relation",
+          "$ref" : "#/definitions/Person"
+        }
+      }
+    },
+    "RelationsResponse" : {
+      "type" : "object",
+      "required" : [ "children", "parents" ],
+      "properties" : {
+        "parents" : {
+          "type" : "array",
+          "example" : "list",
+          "description" : "The parents of the relation",
+          "items" : {
+            "$ref" : "#/definitions/PersonRelation"
+          }
+        },
+        "children" : {
+          "type" : "array",
+          "example" : "list",
+          "description" : "The children of the relation",
+          "items" : {
+            "$ref" : "#/definitions/PersonRelation"
+          }
+        }
+      }
+    },
+    "User" : {
+      "type" : "object",
+      "required" : [ "email", "from", "id", "role", "until", "username" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 1,
+          "description" : "The unique ID of the user"
+        },
+        "username" : {
+          "type" : "string",
+          "example" : "john_doe",
+          "description" : "The unique username of the user"
+        },
+        "email" : {
+          "type" : "string",
+          "example" : "john@doe.com",
+          "description" : "The unique email of the user"
+        },
+        "from" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "01/01/2018",
+          "description" : "The date from which the user is valid. Format is: DD/MM/YYYY"
+        },
+        "until" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "31/12/9999",
+          "description" : "The date on which to user is invalid. Format is: DD/MM/YYYY"
+        },
+        "role" : {
+          "type" : "string",
+          "example" : "administrator",
+          "description" : "The system-role of the user",
+          "enum" : [ "contributor", "administrator", "read", "privileged_read" ]
+        }
+      }
+    }
+  }
+}

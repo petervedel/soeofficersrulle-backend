@@ -5,6 +5,7 @@ import com.nordkern.soeofficer.api.Rank;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +33,11 @@ public class RankDAO extends AbstractDAO<Rank> {
     public void delete(Integer id) {
         Rank rank = findById(id.longValue());
         currentSession().delete(rank);
+    }
+
+
+    public List<Rank> findAllActiveOnDate(Date date) {
+        return list(namedQuery("com.nordkern.soeofficer.api.RanksActiveOnDateParam.find").setParameter("theDate", date));
     }
 
     public List<Rank> findAll() {

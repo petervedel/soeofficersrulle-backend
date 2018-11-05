@@ -28,7 +28,7 @@ database:
   password: ${MYSQL_PASSWORD}
 
   # the JDBC URL
-  url: jdbc:mysql://${MYSQL_ADRESS}:${MYSQL_PORT}/${MYSQL_DATABASE}
+  url: jdbc:mysql://${MYSQL_ADRESS}:${MYSQL_PORT}/${MYSQL_DATABASE}?zeroDateTimeBehavior=convertToNull
 
   # any properties specific to your JDBC driver:
   properties:

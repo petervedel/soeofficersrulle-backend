@@ -16,13 +16,21 @@ import javax.validation.constraints.NotNull;
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "com.nordkern.soeofficer.api.Relations.findParents",
-                query = "SELECT * FROM relation WHERE child_id = :id",
-                resultClass = Relation.class
+                query = "SELECT person.*, officer.id AS officer_id, relation.id AS relation_id " +
+                        "FROM person " +
+                        "LEFT JOIN officer " +
+                        "  ON officer.person_id = person.id " +
+                        "JOIN relation ON person.id = relation.parent_id " +
+                        "WHERE relation.child_id = :id"
         ),
         @NamedNativeQuery(
                 name = "com.nordkern.soeofficer.api.Relations.findChildren",
-                query = "SELECT * FROM relation WHERE parent_id = :id",
-                resultClass = Relation.class
+                query = "SELECT person.*, officer.id AS officer_id, relation.id AS relation_id " +
+                        "FROM person " +
+                        "LEFT JOIN officer " +
+                        "  ON officer.person_id = person.id " +
+                        "JOIN relation ON person.id = relation.child_id " +
+                        "WHERE relation.parent_id = :id"
         )
 })
 
@@ -31,8 +39,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Table(name = "relation")
 public class Relation {
-
-    public enum Title {Mor, Far}
 
     @ApiModelProperty(value = "The unique ID of the relation", example = "1", required = true)
     @Column(name = "id")
@@ -60,12 +66,4 @@ public class Relation {
     @ManyToOne
     @JoinColumn(name = "child_id", nullable = false)
     private Person child;
-
-    @ApiModelProperty(value = "The parent of the relation", example = "Far", required = true)
-    @Getter
-    @JsonProperty
-    @Setter
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Title title;
 }

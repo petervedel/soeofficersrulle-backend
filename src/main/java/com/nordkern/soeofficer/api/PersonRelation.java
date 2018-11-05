@@ -18,24 +18,14 @@ import java.util.Date;
  * Created by mortenfrank on 24/11/2017.
  */
 
-@NamedNativeQueries({
-        @NamedNativeQuery(
-                name = "com.nordkern.soeofficer.api.Person.findAll",
-                query = "SELECT * FROM person " +
-                        "ORDER BY person.surname, person.date_of_birth DESC",
-                resultClass = Person.class
-        )
-})
-@Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
-@Table(name = "person")
-public class Person {
+public class PersonRelation {
 
     public enum Gender { Male,Female,Unknown }
+    public enum Type { Mother,Father }
 
     @ApiModelProperty(value = "The unique ID of the person", example = "1", required = true)
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Id
@@ -44,7 +34,6 @@ public class Person {
     private Long id;
 
     @ApiModelProperty(value = "The given name of the person", example = "John", required = true)
-    @Column(name = "given_name")
     @Getter
     @JsonProperty
     @Length(max=25)
@@ -52,7 +41,6 @@ public class Person {
     private String givenName;
 
     @ApiModelProperty(value = "The surname of the person", example = "Doe", required = true)
-    @Column(name = "surname")
     @Getter
     @JsonProperty
     @Length(max=50)
@@ -60,7 +48,6 @@ public class Person {
     private String surname;
 
     @ApiModelProperty(value = "The person's date of birth. Format is: DD/MM/YYYY", example = "01/01/2018", required = true)
-    @Column(name = "date_of_birth")
     @Getter
     @JsonProperty
     @Setter
@@ -69,7 +56,6 @@ public class Person {
     private Date dateOfBirth;
 
     @ApiModelProperty(value = "The gender of the person. Accepted values are from the set {Mand,Kvinde,Ukendt}", example = "Mand", required = true)
-    @Column(name = "gender")
     @Getter
     @JsonProperty
     @NotNull
@@ -85,4 +71,25 @@ public class Person {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(value= TemporalType.DATE)
     private Date dateOfDeath;
+
+    @ApiModelProperty(value = "The type of parent", example = "{mother,father}")
+    @Getter
+    @JsonProperty
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private Type type;
+
+    @ApiModelProperty(value = "The unique ID of the officer", example = "1")
+    @Getter
+    @JsonProperty
+    @Setter
+    private Long officerId;
+
+    @ApiModelProperty(value = "The id of the relation", example = "true / false")
+    @Column(name = "relation_id")
+    @Getter
+    @Setter
+    @JsonProperty
+    private Long relationID;
+
 }

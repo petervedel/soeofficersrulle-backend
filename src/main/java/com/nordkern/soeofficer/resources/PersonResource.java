@@ -179,31 +179,14 @@ public class PersonResource implements DummyObject {
     }
 
     @GET
-    @Path("/{id}/parents")
+    @Path("/{id}/relations")
     @PermitAll
     @Timed
     @ApiOperation(value = "Gets parents of person",
-            response = Relation.class,
-            responseContainer = "List")
+            response = RelationsResponse.class)
     @UnitOfWork
-    public List<Relation> readParents(@PathParam("id") LongParam id, @Auth AuthenticatedUser autheticatedUser) {
-        List<Relation> relations = relationDAO.findParentsOfPerson(id.get());
-
-        return relations;
-    }
-
-    @GET
-    @Path("/{id}/children")
-    @PermitAll
-    @Timed
-    @ApiOperation(value = "Gets children of person",
-            response = Relation.class,
-            responseContainer = "List")
-    @UnitOfWork
-    public List<Relation> readChildren(@PathParam("id") LongParam id, @Auth AuthenticatedUser autheticatedUser) {
-        List<Relation> relations = relationDAO.findChildrenOfPerson(id.get());
-
-        return relations;
+    public RelationsResponse getRelations(@PathParam("id") LongParam id, @Auth AuthenticatedUser autheticatedUser) {
+        return relationDAO.findRelationsOfPerson(id.get());
     }
 
     @Override
@@ -220,7 +203,7 @@ public class PersonResource implements DummyObject {
         dummyPerson.setDateOfBirth(dateOfBirth);
         dummyPerson.setGivenName("John");
         dummyPerson.setSurname("Doe");
-        dummyPerson.setGender(Person.Gender.Mand);
+        dummyPerson.setGender(Person.Gender.Male);
 
         return dummyPerson;
     }

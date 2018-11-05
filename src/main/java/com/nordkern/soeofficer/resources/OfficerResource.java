@@ -2,6 +2,7 @@ package com.nordkern.soeofficer.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import com.nordkern.soeofficer.api.*;
 import com.nordkern.soeofficer.core.MessageFactory;
 import com.nordkern.soeofficer.db.OfficerDAO;
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
@@ -134,7 +136,19 @@ public class OfficerResource implements DummyObject {
     @UnitOfWork
     @Consumes(MediaType.APPLICATION_JSON)
     public Officer createOfficer(@Valid Officer officer, @Auth AuthenticatedUser user) throws ParseException {
-        return officerDAO.create(officer);
+        try {
+            return officerDAO.create(officer);
+        } catch (Exception e) {
+            if (e instanceof MySQLIntegrityConstraintViolationException || e instanceof ConstraintViolationException) {
+                throw new WebApplicationException(
+                        MessageFactory.getErrorMessage(
+                                "UNIQUE_CONSTRAINT_VIOLATED"),
+                        Response.Status.BAD_REQUEST);
+            } else {
+                throw new WebApplicationException(e.getMessage(),
+                        Response.Status.INTERNAL_SERVER_ERROR);
+            }
+        }
     }
 
     @ApiImplicitParams({
@@ -159,7 +173,15 @@ public class OfficerResource implements DummyObject {
             officer.setId(new Long(id));
             officerDAO.update(officer);
         } catch (Exception e) {
-            throw new WebApplicationException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+            if (e instanceof MySQLIntegrityConstraintViolationException || e instanceof ConstraintViolationException) {
+                throw new WebApplicationException(
+                        MessageFactory.getErrorMessage(
+                                "UNIQUE_CONSTRAINT_VIOLATED"),
+                        Response.Status.BAD_REQUEST);
+            } else {
+                throw new WebApplicationException(e.getMessage(),
+                        Response.Status.INTERNAL_SERVER_ERROR);
+            }
         }
 
         return officer;
@@ -194,6 +216,7 @@ public class OfficerResource implements DummyObject {
             @ApiImplicitParam(name = "gender", value = "The gender of the person. Accepted values are from the set {Mand,Kvinde,Ukendt}", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "appointedDate", value = "The date from which the officer title is valid", dataType = "date", paramType = "query"),
             @ApiImplicitParam(name = "rankID", value = "The ID of the rank to be used as a criteria", dataType = "integer", paramType = "query"),
+            @ApiImplicitParam(name = "dodabNumber", value = "The officer's Dodab number", dataType = "integer", paramType = "query"),
     })
     @JsonParseFailure(swaggerLink = "https://path.to.swagger")
     @POST
@@ -286,7 +309,7 @@ public class OfficerResource implements DummyObject {
         dummyPerson.setDateOfBirth(dateOfBirth);
         dummyPerson.setGivenName("John");
         dummyPerson.setSurname("Doe");
-        dummyPerson.setGender(Person.Gender.Mand);
+        dummyPerson.setGender(Person.Gender.Male);
 
         dummyOfficer.setPerson(dummyPerson);
 

@@ -38,13 +38,21 @@ public class PersonDAO extends AbstractDAO<Person> {
     public List<Person> findByCriteria(PersonSearch personSearch) {
         CriteriaBuilder builder = currentSession().getCriteriaBuilder();
         List<Predicate> conditionsList = new ArrayList<>();
-        List<Person> result = new ArrayList<>();
+        List<Person> result;
 
         CriteriaQuery<Person> query = builder.createQuery(Person.class);
         Root<Person> root = query.from(Person.class);
         query.select(root);
+        if (personSearch.getGivenName() != null) {
+            personSearch.setGivenName(personSearch.getGivenName().replace("*","%"));
+        }
+        if (personSearch.getSurname() != null) {
+            personSearch.setSurname(personSearch.getSurname().replace("*","%"));
+        }
         Predicate givenName = builder.equal(root.get("givenName"),personSearch.getGivenName());
+        Predicate givenNameLike = builder.like(root.get("givenName"),personSearch.getGivenName());
         Predicate surname = builder.equal(root.get("surname"),personSearch.getSurname());
+        Predicate surnameLike = builder.like(root.get("surname"),personSearch.getSurname());
         Predicate gender = builder.equal(root.get("gender"),personSearch.getGender());
 
         if (personSearch.getYearOfBirthFrom() == null && personSearch.getGivenName() == null && personSearch.getSurname() == null && personSearch.getGender() == null) {
@@ -65,10 +73,18 @@ public class PersonDAO extends AbstractDAO<Person> {
             conditionsList.add(builder.between(root.get("dateOfBirth"),yearOfBirthFrom,yearOfBirthTo));
         }
         if (personSearch.getGivenName() != null) {
-            conditionsList.add(givenName);
+            if (personSearch.getGivenName().contains("%")) {
+                conditionsList.add(givenNameLike);
+            } else {
+                conditionsList.add(givenName);
+            }
         }
         if (personSearch.getSurname() != null) {
-            conditionsList.add(surname);
+            if (personSearch.getSurname().contains("%")) {
+                conditionsList.add(surnameLike);
+            } else {
+                conditionsList.add(surname);
+            }
         }
         if (personSearch.getGender() != null) {
             conditionsList.add(gender);
@@ -103,8 +119,8 @@ public class PersonDAO extends AbstractDAO<Person> {
             if (!line.contains("given_name")) {
                 attr = line.split(",");
                 entry = new Person();
-                entry.setGivenName(attr[0].trim().replace("\"", "").replace("\'",""));
-                entry.setSurname(attr[1].trim().replace("\"", "").replace("\'",""));
+                entry.setSurname(attr[0].trim().replace("\"", "").replace("\'",""));
+                entry.setGivenName(attr[1].trim().replace("\"", "").replace("\'",""));
                 entry.setDateOfBirth((new SimpleDateFormat("dd/MM/yyyy")).parse(attr[2].trim().replace("\"", "").replace("\'","")));
                 entry.setGender(Person.Gender.valueOf(attr[3].trim().replace("\"", "").replace("\'","")));
                 if (attr[4].trim().contains("NULL") || attr[4].trim().contains("null")) {

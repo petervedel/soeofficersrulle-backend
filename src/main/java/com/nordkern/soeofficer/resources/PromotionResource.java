@@ -127,7 +127,7 @@ public class PromotionResource implements DummyObject {
         dummyPerson.setDateOfBirth(dateOfBirth);
         dummyPerson.setGivenName("John");
         dummyPerson.setSurname("Doe");
-        dummyPerson.setGender(Person.Gender.Mand);
+        dummyPerson.setGender(Person.Gender.Male);
 
         dummyOfficer.setPerson(dummyPerson);
 

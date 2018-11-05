@@ -67,4 +67,9 @@ public class OfficerSearch {
     @JsonProperty
     @Setter
     private Long rankID;
+
+    @Getter
+    @JsonProperty
+    @Setter
+    private Long appointedNumber;
 }

@@ -4,11 +4,11 @@ MAINTAINER Morten Frank
 WORKDIR /var/dropwizard
 
 
-ENV MYSQL_ADRESS nordkerndk.csk1n1qcyjd7.eu-central-1.rds.amazonaws.com
-ENV MYSQL_DATABASE soeofficer
-ENV MYSQL_USER nordkern
-ENV MYSQL_PASSWORD x9ydmcArUNhN=&YXrac
-ENV MYSQL_PORT 3306
+ENV MYSQL_ADRESS <INSERT_MYSQL_ADDRESS>
+ENV MYSQL_DATABASE <INSERT_DATABASE_NAME>
+ENV MYSQL_USER <INSERT_MYSQL_USER>
+ENV MYSQL_PASSWORD <INSERT_MYSQL_PASSWORD>
+ENV MYSQL_PORT <INSERT_MYSQL_PORT>
 ENV API_USERNAME test
 ENV API_PASSWORD YBNaKLms3HtaW2htwwYeRb8y
 ENV DROPWIZARD_PORT 8081
@@ -19,4 +19,5 @@ ADD src/main/resources/config.yml /var/dropwizard/config.yml
 ADD scripts/entrypoint.sh /entrypoint.sh
 
 RUN chmod 755 /entrypoint.sh
+
 ENTRYPOINT ["/entrypoint.sh"]

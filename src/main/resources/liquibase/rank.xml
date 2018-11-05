@@ -15,6 +15,9 @@
             <column name="rank_name" type="varchar(25)">
                 <constraints nullable="false"/>
             </column>
+            <column name="rank_name_en" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
             <column name="rank_valid_from" type="date">
                 <constraints nullable="false"/>
             </column>

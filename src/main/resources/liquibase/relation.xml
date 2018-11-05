@@ -15,7 +15,7 @@
             <column name="child_id" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="title" defaultValue="Far" type="ENUM('Far','Mor')">
+            <column name="title" defaultValue="Father" type="ENUM('Mother','Father')">
                 <constraints nullable="false"/>
             </column>
         </createTable>

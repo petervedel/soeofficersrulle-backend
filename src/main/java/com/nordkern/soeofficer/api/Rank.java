@@ -16,11 +16,20 @@ import java.util.Date;
 /**
  * Created by mortenfrank on 24/11/2017.
  */
-@NamedNativeQuery(
-        name = "com.nordkern.soeofficer.api.Rank.findAll",
-        query = "SELECT * FROM rank",
-        resultClass = Rank.class
-)
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name="com.nordkern.soeofficer.api.RanksActiveOnDateParam.find",
+                query = "SELECT * " +
+                        "FROM rank " +
+                        "WHERE :theDate BETWEEN rank_valid_from AND rank_valid_until",
+                resultClass = Rank.class
+        ),
+        @NamedNativeQuery(
+                name = "com.nordkern.soeofficer.api.Rank.findAll",
+                query = "SELECT * FROM rank",
+                resultClass = Rank.class
+        )
+})
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
@@ -51,6 +60,14 @@ public class Rank {
     @NotNull
     @Setter
     private String rankName;
+
+    @ApiModelProperty(value = "The english name of the rank", example = "Officer", required = true)
+    @Column(name = "rank_name_en")
+    @Getter
+    @JsonProperty
+    @NotNull
+    @Setter
+    private String rankNameEn;
 
     @ApiModelProperty(value = "The date from which the rank is valid", example = "01/01/2018", required = true)
     @Column(name = "rank_valid_from")

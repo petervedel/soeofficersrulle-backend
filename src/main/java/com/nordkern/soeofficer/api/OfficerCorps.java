@@ -37,13 +37,13 @@ public class OfficerCorps {
     @Setter
     private Long dodabNumber;
 
-    @ApiModelProperty(value = "The date from which the officer title is valid", example = "01/01/2018", required = true)
+    @ApiModelProperty(value = "The date of promotion", example = "01/01/2018", required = true)
     @Getter
     @JsonProperty
     @Setter
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(value= TemporalType.DATE)
-    private Date appointedDate;
+    private Date promotionDate;
 
     @ApiModelProperty(value = "The date from which the officer title is invalid", example = "01/01/2018", required = true)
     @Getter
@@ -92,6 +92,14 @@ public class OfficerCorps {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(value= TemporalType.DATE)
     private Date dateOfBirth;
+
+    @ApiModelProperty(value = "The person's date of death. Format is: DD/MM/YYYY", example = "01/01/2018", required = true)
+    @Getter
+    @JsonProperty
+    @Setter
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(value= TemporalType.DATE)
+    private Date dateOfDeath;
 
     @ApiModelProperty(value = "The gender of the person. Accepted values are from the set {Mand,Kvinde,Ukendt}", example = "Mand", required = true)
     @Getter

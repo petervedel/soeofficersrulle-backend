@@ -3,9 +3,7 @@ package com.nordkern.soeofficer;
 /**
  * Created by mortenfrank on 18/12/2017.
  */
-import com.google.inject.Inject;
 import io.dropwizard.jersey.DropwizardResourceConfig;
-import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ws.rs.WebApplicationException;
@@ -24,9 +22,6 @@ import java.util.List;
 @Provider
 @Slf4j
 public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException> {
-
-    @Inject
-    private Environment environment;
 
     @Override
     public Response toResponse(RuntimeException runtime) {
